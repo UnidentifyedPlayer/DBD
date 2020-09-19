@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Записаться на приём</title>
+</head>
+<body>
+<form method="POST">
+    <p>
+        Имя
+        <input type="text" name="first_name">
+    </p>
+    <p>
+        Отчество
+        <input type="text" name="middle_name">
+    </p>
+    <p>
+        Фамилия
+        <input type="text" name="surname">
+    </p>
+    <p>
+        Номер полиса
+        <input type="number" name="policy_num">
+    </p>
+    <p>
+        Дата рождения:
+        <input type="number" name="day">
+        <input type="number" name="month">
+        <input type="number" name="year">
+    </p>
+    <p>
+        <input type="submit" name="Записаться">
+    </p>
+</form>
+{% if errors %}
+<ul>
+{% for error in errors %}
+<li>{{error}}</li>
+{% endfor %}
+</ul>
+{% endif %}
+</body>
+</html>

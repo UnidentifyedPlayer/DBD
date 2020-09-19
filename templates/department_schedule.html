@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Расписание</title>
+</head>
+<body>
+<div>
+    {% include '_menu.html' %}
+    <h2>Расписание</h2>
+    <table>
+        <tr>
+            <th>Доктора</th>
+            {% for date in dates %}
+            <th>{{ date.date.month }}.{{ date.date.day }}</th>
+            {% endfor %}
+        </tr>
+        {% for doc_i in range(doc_c) %}
+        <tr>
+            <th>{{doctors[doc_i].first_name}} {{doctors[doc_i].middle_name}} {{doctors[doc_i].surname}}</th>
+            {% for day_i in range(day_c) %}
+            <td>
+                <a href="{{url_for('show_day_schedule', consultation_id=consult_id, schedule_record_id = records[doc_i*day_c + day_i].id, doctor_id = records[doc_i*day_c + day_i].doctor_id )}}">
+                    {{ records[doc_i*day_c + day_i].status }}
+                </a>
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Консультации</title>
+</head>
+<body>
+<div>
+    {% include '_menu.html' %}
+    <h2>Консультации</h2>
+    <div>
+        {% for c in consultations %}
+        <p><a href ="{{url_for('show_timetable', department_id=depart_id ,consultation_id=c.id)}}">{{c.name}}</a></p>
+        {% endfor %}
+    </div>
+</div>
+</body>
+</html>

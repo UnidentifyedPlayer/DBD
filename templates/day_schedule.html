@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Расписание</title>
+</head>
+<body>
+{% include '_menu.html' %}
+<h2>Расписание</h2>
+<h3>{{doctor.first_name}} {{doctor.middle_name}} {{doctor.surname}}, {{ schedule_record.date.month }}.{{ schedule_record.date.day }}</h3>
+<div>
+    {% if appointments %}
+    {% for appointment in appointments %}
+    {% if appointment.has_appointments %}
+    <p>{{appointment.time}}</p>
+    {% else: %}
+    <p><a href="{{url_for('sign_up', appointment_id=appointment.id, consultation_id=consult_id)}}">{{appointment.time}}</a>
+    </p>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+</div>
+</body>
+</html>

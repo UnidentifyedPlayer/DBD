@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>testing template</title>
+</head>
+<body>
+
+<table>
+    <tr>
+        <th>row_indexes</th>
+        {% for i in range(7) %}
+        <th>{{10+i}}</th>
+        {% endfor %}
+    </tr>
+    {% for i in range(len) %}
+    <tr>
+        <th>header {{ i }}</th>
+        {% for y in list[i] %}
+        <td>{{y}}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

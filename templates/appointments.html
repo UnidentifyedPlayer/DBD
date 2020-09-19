@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% include '_menu.html' %}
+<h2>Ваши Записи</h2>
+{% if appointments_data %}
+{% for appointment_data in appointments_data %}
+<div>
+<ul>
+    <li>{{appointment_data['consultation']}}</li>
+    <li>Doctor : {{appointment_data['doctor'].first_name}} {{appointment_data['doctor'].middle_name}} {{appointment_data['doctor'].surname}}</li>
+    <li>Patient: {{appointment_data['patient'].first_name}} {{appointment_data['patient'].middle_name}} {{appointment_data['patient'].surname}}</li>
+    <li>Day: {{ appointment_data['date'].year }}.{{ appointment_data['date'].month }}.{{ appointment_data['date'].day }}</li>
+    <li>Time: {{ appointment_data['time']}}</li>
+</ul>
+    <form method="post">
+        <input type="hidden" name="record_id" value="{{appointment_data['record_id']}}">
+        <input type="submit" name="cmd" value="Удалить">
+    </form>
+</div>
+{% endfor %}
+{% else %}
+<p>Нет записей</p>
+{% endif%}
+</body>
+</html>
