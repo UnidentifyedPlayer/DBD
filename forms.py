@@ -14,3 +14,8 @@ class DepartmentInsertForm(FlaskForm):
 class DepartmentUpdateForm(FlaskForm):
     name = StringField("Название", validators=[DataRequired()])
     submit = SubmitField("Сохранить")
+
+class DoctorInsertForm(FlaskForm):
+    name = StringField("Название", validators=[DataRequired()])
+    department_id = SelectField(u'Отдел')
+    submit = SubmitField("Сохранить")
