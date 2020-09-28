@@ -1,13 +1,16 @@
 from app_config import app, db
 from model import *
+
 from sqlalchemy import func, subquery
 from sqlalchemy.orm import aliased
 from functions import format_daytime
 from datetime import *
 
-def department_info():
+def department_info(name):
     dep_info = db.session.query(Department,func.count(Doctor.id).label('doc_count')).\
-        outerjoin(Doctor, Doctor.department_id==Department.id).group_by(Department.id)
+        outerjoin(Doctor, Doctor.department_id==Department.id)
+    if()
+    dep_info = dep_info.group_by(Department.id)
     return dep_info.all()
 
 
@@ -44,3 +47,7 @@ def records_info():
     #    print(records[record_index].Appointment.time)
     #    records[record_index].Appointment.time = format_daytime(records[record_index].Appointment.time)
     return records
+
+def get_departments():
+    deps = db.session.query(Departments)
+    return deps.all()
