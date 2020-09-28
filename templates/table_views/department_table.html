@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Отделы</title>
+</head>
+<body>
+<div>
+    <h2>Отделы</h2>
+    <p><a href="{{url_for('tables')}}">Назад</a></p>
+    <p><a href="{{url_for('insert_department')}}">Добавить отдел</a></p>
+</div>
+<div>
+    <table border="1">
+        <tr>
+            <th>Название</th>
+            <th>Число докторов</th>
+            <th>Действия</th>
+        </tr>
+        {% for dep in deps_info %}
+        <tr>
+            <td>{{dep.Department.name}}</td>
+            <td align="center">{{dep.doc_count}}</td>
+            <td>
+                <p><a href="{{url_for('delete_department', department_id = dep.Department.id)}}">Delete</a>   <a>Изменить</a></p>
+                <p><a>Добавить докторов</a></p>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>

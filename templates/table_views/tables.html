@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+
+    <p><a href="{{ url_for('logout') }}">Logout</a></p>
+</div>
+<div>
+    <p><a href="{{url_for('departments_table')}}">Отделы</a></p>
+    <p><a href="{{url_for('doctor_table')}}">Врачи</a></p>
+    <p><a href="{{url_for('consultations_table')}}">Консультации</a></p>
+    <p><a href="{{url_for('schedules_table')}}">Таблица графика работы</a></p>
+    <p><a href="{{url_for('patients_table')}}">Пациенты</a></p>
+    <p><a href="{{url_for('records_table')}}">Записи</a></p>
+    <p><a href="{{url_for('admin')}}">Назад</a></p>
+</div>
+</body>
+</html>

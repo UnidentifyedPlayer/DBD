@@ -1,26 +1,143 @@
-from app_config import app, db
+#from app_config import app, db
 from model import *
 
 from functions import get_nearest_dates, get_not_empty_dep_1, get_schedules
 from dump.filldb import *
 from functions import *
+from Tables import *
 
-#from flask_login import LoginManager, login_required, login_user, logout_user, current_user
+from forms import  LoginForm, DepartmentForm
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from sqlalchemy import desc
 
 from datetime import *
 
-from flask import Flask, url_for, session, redirect, request
+from flask import Flask, url_for, session, redirect, request,flash
 from markupsafe import escape
 from flask import request
 from flask import render_template
 
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
+# TODO: add pages for viewing and editing departments, doctors, consultations and schedules, patients
+# TODO: add search by department for doctors and consultations pages, by doctors for schedules page
+# TODO: add number of doctors in every department for departments page
+# TODO: add page for records, implement only deletion function there( we have the insertion already elsewhere)
+
+# flask-login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+
 
 @app.route('/')
 def index():
     return redirect(url_for('consultations'))
+
+@app.route('/admin/tables/')
+@login_required
+def tables():
+    return render_template('table_views/tables.html')
+
+
+@app.route('/admin/departments')
+@login_required
+def departments_table():
+    deps_info = department_info()
+    return render_template('table_views/department_table.html', deps_info = deps_info)
+
+@app.route('/admin/department/add', methods=["GET", "POST"])
+@login_required
+def insert_department():
+    form = DepartmentForm("Добавить")
+    if form.validate_on_submit():
+        dep = Department(name = form.name.data)
+        db.session.add(dep)
+        db.session.commit()
+        return redirect(url_for('departments_table'))
+    return render_template('table_views/department_form.html', form = form)
+
+
+
+# TODO: проконтроллировать удаелние связанных консультаций/докторов
+#  (Возможно, сделать цепочку методов для пользования всеми раутами удаления)
+@app.route('/admin/department/delete/<int:department_id>')
+@login_required
+def delete_department(department_id):
+    dep = db.session.query(Department).get(department_id)
+    db.session.delete(dep)
+    db.session.commit()
+    return redirect(url_for('departments_table'))
+
+
+
+@app.route('/admin/doctors')
+@login_required
+def doctor_table():
+    docs_info = doctors_info()
+    return render_template('table_views/doctors_table.html', docs_info = docs_info)
+
+
+@app.route('/admin/schedules')
+@login_required
+def schedules_table():
+    schedules = schedules_info()
+    return render_template('table_views/schedules.html', schedules = schedules)
+
+
+@app.route('/admin/consultations')
+@login_required
+def consultations_table():
+    consults_info = consultations_info()
+    return render_template('table_views/consultations_table.html', consults_info = consults_info)
+
+
+@app.route('/admin/patients')
+@login_required
+def patients_table():
+    patients = patients_info()
+    return render_template('table_views/patients.html', patients = patients)
+
+
+@app.route('/admin/records')
+@login_required
+def records_table():
+    records = records_info()
+    return render_template('table_views/records.html', records = records)
+
+
+@app.route('/admin/')
+@login_required
+def admin():
+    return render_template('admin.html')
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    feedback = ''
+    if current_user.is_authenticated:
+        return redirect(url_for('admin'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        u = db.session.query(User).\
+            filter(User.login == form.login.data).\
+            filter(User.password == form.password.data).\
+            one_or_none()
+        if u is None:
+            feedback =  "Неверное имя пользователя или пароль"
+            flash("Invalid username/password", 'error')
+            return redirect(url_for('login'))
+        else:
+            login_user(u)
+            return redirect(url_for('admin'))
+
+    return render_template('login.html', feedback=feedback, form=form)
+
+@app.route('/logout/')
+@login_required
+def logout():
+    logout_user()
+    flash("You have been logged out.")
+    return redirect(url_for('login'))
 
 
 @app.route('/appointments', methods=['POST', 'GET'])
@@ -62,6 +179,7 @@ def department_consults(department_id):
         filter(ConsultationType.department_id == department_id). \
         order_by(ConsultationType.id).all()
     return render_template('department_consults.html', depart_id=department_id, consultations=consult_types)
+
 
 
 @app.route('/departments/<int:department_id>/<int:consultation_id>/schedule')
@@ -123,9 +241,9 @@ def sign_up(appointment_id, consultation_id):
     return render_template('form.html', appointment_id=appointment_id, consultation_id=consultation_id, errors=errors)
 
 
-#@app.route('/hello')
-#def hello():
-#    return 'Hello, World'
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.query(User).get(user_id)
 
 
 #@app.route('/login')
@@ -143,16 +261,6 @@ def not_found(error):
     return render_template('error.html'), 404
 
 
-#@app.route('/test')
-#def test():
-#    list = []
-#    list1 = [1, 4, 5, 6, 6, 7, 8]
-#    list2 = [31, 42, 0, 9, 9, 4, 2]
-#    list.append(list1)
-#    list.append(list2)
-#    return render_template('test_template.html', list=list, len=len(list))
-
-
 def add_obj(instance):
     try:
         db.session.add(instance)
@@ -167,10 +275,21 @@ def add_obj(instance):
 #     session.remove()
 
 
+def check_admin():
+    admin = db.session.query(User).filter(User.email=="admin_test@mail.com").all()
+    if(len(admin)==0):
+        print(admin)
+        new_admin = User(name="Админ Админович",login="adminlog",
+                         email="admin_test@mail.com",password="adminpassw", role ="admin",
+                         created_on=datetime.utcnow(), updated_on=datetime.utcnow() )
+        db.session.add(new_admin)
+        db.session.commit()
+
 
 if __name__ == '__main__':
     # db.drop_all()
-    # db.create_all()
+    db.create_all()
+    check_admin()
     # refill_db()
 
     #update_db()

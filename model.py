@@ -1,5 +1,6 @@
 from app_config import db
 from sqlalchemy import Column, Integer, String
+from datetime import datetime
 
 class Patient(db.Model):
     __tablename__ = 'patients'
@@ -81,27 +82,33 @@ class Record(db.Model):
     consult_type_id = db.Column(db.Integer, db.ForeignKey('consult_types.id'),nullable=False)
     consult_type = db.relationship('ConsultationType')
 
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(100))
+    login = db.Column(db.String(50), nullable=False, unique=True)
+    email = db.Column(db.String(100), nullable=False, unique=True)
+    password = db.Column(db.String(100), nullable=False)
+    role = db.Column(db.String(30), nullable=False)
+    created_on = db.Column(db.DateTime(), default=datetime.utcnow)
+    updated_on = db.Column(db.DateTime(), default=datetime.utcnow,  onupdate=datetime.utcnow)
 
+    def __repr__(self):
+        return "<{}:{}>".format(self.id, self.username)
 
-# class User(db.Model):
-#     __tablename__ = 'user'
-#     user_id = db.Column('user_id', db.INTEGER, primary_key=True, autoincrement=True)
-#     user_login = db.Column('user_login', db.String(20), unique=True)
-#     user_name = db.Column('user_name', db.String(60), nullable=False)
-#     user_password = db.Column('user_password', db.String(60), nullable=False)
-#
-#     # Flask-Login Support
-#     def is_active(self):
-#         """True, as all users are active."""
-#         return True
-#
-#     def get_id(self):
-#         """Return the email address to satisfy Flask-Login's requirements."""
-#         return str(self.user_id)
-#
-#     def is_authenticated(self):
-#         return True
-#
-#     def is_anonymous(self):
-#         """False, as anonymous users aren't supported."""
-#         return False
+    # Flask-Login Support
+    def is_active(self):
+        """True, as all users are active."""
+        return True
+
+    def get_id(self):
+        """Return the email address to satisfy Flask-Login's requirements."""
+        return str(self.id)
+
+    def is_authenticated(self):
+        return True
+
+    def is_anonymous(self):
+        """False, as anonymous users aren't supported."""
+        return False
+

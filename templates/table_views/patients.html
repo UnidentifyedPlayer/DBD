@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Пациенты</title>
+</head>
+<body>
+<div>
+    <h2>Отделы</h2>
+    <p><a href="{{url_for('tables')}}">Назад</a></p>
+</div>
+<div>
+    <table border="1">
+        <tr>
+            <th>Ф.И.О.</th>
+            <th>№ полиса</th>
+            <th>Число записей</th>
+            <th>Действия</th>
+        </tr>
+        {% for patient in patients %}
+        <tr>
+            <td>{{patient.Patient.first_name}} {{patient.Patient.middle_name}} {{patient.Patient.surname}}</td>
+            <td>{{patient.Patient.policy_num}}</td>
+            <td align="center">{{patient.rec_count}}</td>
+            <td>
+                <p><button>Delete</button></p>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>

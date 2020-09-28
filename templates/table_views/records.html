@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <h2>Отделы</h2>
+    <p><a href="{{url_for('tables')}}">Назад</a></p>
+</div>
+<div>
+    <table border="1">
+        <tr>
+            <th>Пациент</th>
+            <th>Доктор</th>
+            <th>Консультация</th>
+            <th>Дата</th>
+            <th>Время</th>
+            <th>Действия</th>
+        </tr>
+        {% for record in records %}
+        <tr>
+            <td>{{record.Patient.first_name}} {{record.Patient.middle_name}} {{record.Patient.surname}}</td>
+            <td>{{record.Doctor.first_name}} {{record.Doctor.middle_name}} {{record.Doctor.surname}}</td>
+            <td>{{record.ConsultationType.name}}</td>
+            <td>
+                {{record.Appointment.date.year}}.{{record.Appointment.date.month}}.{{record.Appointment.date.day}}
+            </td>
+            <td>
+                {{record.Appointment.time}}
+            </td>
+            <td>
+                <p>
+                    <button>Delete</button>
+                </p>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>

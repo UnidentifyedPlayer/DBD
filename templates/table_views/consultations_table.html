@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Консультации</title>
+</head>
+<body>
+<div>
+    <h2>Консультации</h2>
+    <p><a href="{{url_for('tables')}}">Назад</a></p>
+</div>
+<div>
+    <table border="1">
+        <tr>
+            <th>Название</th>
+            <th>Отдел</th>
+            <th>Действия</th>
+        </tr>
+        {% for consult_info in consults_info %}
+        <tr>
+            <td>{{consult_info.ConsultationType.name}}</td>
+            <td>{{consult_info.dep_name}}</td>
+            <td> <button>Delete</button> </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>

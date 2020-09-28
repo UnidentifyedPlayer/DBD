@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>График работы</title>
+</head>
+<body>
+<div>
+    <h2>Отделы</h2>
+    <p><a href="{{url_for('tables')}}">Назад</a></p>
+</div>
+<div>
+    <table border="1">
+        <tr>
+            <th>Доктор</th>
+            <th>Дата</th>
+            <th>Статус</th>
+            <th>Действия</th>
+        </tr>
+        {% for schedule in schedules %}
+        <tr>
+            <td>
+                {{schedule.Doctor.first_name}} {{schedule.Doctor.middle_name}} {{schedule.Doctor.surname}}
+            </td>
+            <td align="center">
+                {{schedule.ScheduleRecord.date.year}}.{{schedule.ScheduleRecord.date.month}}.{{schedule.ScheduleRecord.date.day}}
+            </td>
+            <td>
+                {{schedule.ScheduleRecord.status}}
+            </td>
+            <td>
+                <p>
+                    <button>Delete</button>
+                </p>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>
