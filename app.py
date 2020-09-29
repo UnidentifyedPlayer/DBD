@@ -6,7 +6,7 @@ from dump.filldb import *
 from functions import *
 from Tables import *
 
-from forms import  LoginForm, DepartmentForm
+from forms import  *
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from sqlalchemy import desc
 
@@ -19,9 +19,8 @@ from flask import render_template
 
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
-# TODO: add pages for viewing and editing departments, doctors, consultations and schedules, patients
+# TODO: add editing of already existing departments, doctors, consultations and schedules, patients
 # TODO: add search by department for doctors and consultations pages, by doctors for schedules page
-# TODO: add number of doctors in every department for departments page
 # TODO: add page for records, implement only deletion function there( we have the insertion already elsewhere)
 
 # flask-login
@@ -49,7 +48,7 @@ def departments_table():
 @app.route('/admin/department/add', methods=["GET", "POST"])
 @login_required
 def insert_department():
-    form = DepartmentForm("Добавить")
+    form = DepartmentInsertForm()
     if form.validate_on_submit():
         dep = Department(name = form.name.data)
         db.session.add(dep)

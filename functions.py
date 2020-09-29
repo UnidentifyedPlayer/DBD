@@ -66,10 +66,17 @@ def get_schedule_records(depart_id):
     cur_date = datetime.now().date()
     cur_time = datetime.now().time()
     date_limit = date.fromordinal(cur_date.toordinal() + 7)
-    doctors = db.session.query(Doctor.id).filter(Doctor.department_id == depart_id).subquery('doctors')
-    query_1 = db.session.query(ScheduleRecord).filter(ScheduleRecord.date >= cur_date, ScheduleRecord.date < date_limit,
-                                                      ScheduleRecord.doctor_id == doctors.c.id)
-    return query_1.all()
+    doctors = db.session.query(Doctor.id).filter(Doctor.department_id == depart_id).all()
+    doctors_schedule = dict()
+    for doctor in doctors:
+        doctors_schedule[doctor.id] = dict()
+        schedules = db.session.query(ScheduleRecord).filter(ScheduleRecord.date >= cur_date,
+                                                          ScheduleRecord.date < date_limit,
+                                                          ScheduleRecord.doctor_id == doctor.id).all()
+        doc = db.session.query(Doctor).get(doctor.id)
+        for schedule in schedules:
+            doctors_schedule[doc.id][schedule.date.toordinal()] = schedule
+    return doctors_schedule
 
 
 def get_doctors(depart_id):

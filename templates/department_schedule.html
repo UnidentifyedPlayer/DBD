@@ -18,11 +18,17 @@
         {% for doc_i in range(doc_c) %}
         <tr>
             <th>{{doctors[doc_i].first_name}} {{doctors[doc_i].middle_name}} {{doctors[doc_i].surname}}</th>
-            {% for day_i in range(day_c) %}
+            {% for date in dates %}
             <td>
-                <a href="{{url_for('show_day_schedule', consultation_id=consult_id, schedule_record_id = records[doc_i*day_c + day_i].id, doctor_id = records[doc_i*day_c + day_i].doctor_id )}}">
-                    {{ records[doc_i*day_c + day_i].status }}
+                {% if records[doctors[doc_i].id].get(date.date.toordinal()) %}
+                <a href="{{url_for('show_day_schedule', consultation_id=consult_id,
+                 schedule_record_id = records[doctors[doc_i].id][date.date.toordinal()].id,
+                 doctor_id = records[doctors[doc_i].id][date.date.toordinal()].doctor_id )}}">
+                    {{ records[doctors[doc_i].id][date.date.toordinal()].status }}
                 </a>
+                {% else %}
+                <a> ___ </a>
+                {% endif %}
             </td>
             {% endfor %}
         </tr>

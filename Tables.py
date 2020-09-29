@@ -6,10 +6,11 @@ from sqlalchemy.orm import aliased
 from functions import format_daytime
 from datetime import *
 
-def department_info(name):
+def department_info(name=None):
     dep_info = db.session.query(Department,func.count(Doctor.id).label('doc_count')).\
         outerjoin(Doctor, Doctor.department_id==Department.id)
-    if()
+    if(name is not None):
+        dep_info = dep_info.filter(Department.name == name)
     dep_info = dep_info.group_by(Department.id)
     return dep_info.all()
 

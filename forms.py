@@ -1,4 +1,4 @@
-from wtforms import StringField, SubmitField, TextAreaField,  BooleanField, PasswordField
+from wtforms import StringField, SubmitField, TextAreaField,  BooleanField, PasswordField, SelectField, DateField, HiddenField
 from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired, Email
 
@@ -19,3 +19,8 @@ class DoctorInsertForm(FlaskForm):
     name = StringField("Название", validators=[DataRequired()])
     department_id = SelectField(u'Отдел')
     submit = SubmitField("Сохранить")
+
+class ScheduleInsertForm(FlaskForm):
+    date =  DateField('Дата')
+    status = SelectField(u'Статус')
+    doctor_id = HiddenField()
